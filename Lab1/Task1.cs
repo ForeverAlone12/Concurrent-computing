@@ -5,47 +5,37 @@ namespace Lab1;
 public class Task1: AbstractTask
 {
     /// <summary>
-    /// Количество элементов массивов.
+    /// Количество потоков.
     /// </summary>
-    private int _countElements;
+    private int _countThreads;
+
+    /// <summary>
+    /// Минимальное количество потоков.
+    /// </summary>
+    private const int MinCountThread = 100;
+    
+    /// <summary>
+    /// Максимальное количество потоков.
+    /// </summary>
+    private const int MaxCountThread = 10000;
 
     private int[] _arrayA;
     private int[] _arrayC;
 
-    public Task1() : base("asda")
+    public Task1()
+        : base()
     {
-        Console.WriteLine(Title);
-        _arrayA = new int[_countElements];
-        _arrayC = new int[_countElements];
+        _arrayA = new int[CountElements];
+        _arrayC = new int[CountElements];
         InitializationArray();
+        ExecutionWithoutThread();
+        ExecutionWithThread();
     }
     
-
-    /// <summary>
-    /// Считывание входных данных.
-    /// </summary>
     protected override void ReadInputData()
     {
         base.ReadInputData();
-        bool error = true;
-        do
-        {
-            try
-            {
-                Console.Write("Введите количество элементов: ");
-                _countElements = Convert.ToInt32(Console.ReadLine());
-
-                Console.WriteLine($"Вы ввели: {_countElements}");
-
-
-                error = false;
-            }
-            catch (FormatException formatException)
-            {
-                Console.WriteLine($"Ошибка ввода: {formatException} ");
-            }
-    
-        } while (error);
+       _countThreads = ReadIntFromConsole("Введите количество потоков: ", MinCountThread, MaxCountThread);
     }
 
     /// <summary>
@@ -54,7 +44,7 @@ public class Task1: AbstractTask
     private void InitializationArray()
     {
         Random random;
-        for (var i = 0; i < _countElements; i++)
+        for (var i = 0; i < CountElements; i++)
         {
             random = new Random();
             _arrayA[i] = random.Next();
@@ -62,27 +52,34 @@ public class Task1: AbstractTask
         }
     }
 
-
     public void ExecutionWithThread()
     {
         base.ExecutionWithThread();
+        
+        TimeExecution.Start();
+        for (var i = 0; i < _countThreads; i++)
+        {
+            
+        }
+        
+        TimeExecution.Stop();
+        Logger.Info($"Время сравнения массивов: {TimeExecution.ElapsedMilliseconds} ms");
     }
 
     public void ExecutionWithoutThread()
     {
         base.ExecutionWithoutThread();
-        var timeExecution = new Stopwatch();
 
         int countNotEqualElements = 0;
-        timeExecution.Start();
-        for (var i = 0; i < _countElements; i++)
+        TimeExecution.Start();
+        for (var i = 0; i < CountElements; i++)
         {
             if (_arrayA[i] != _arrayC[i])
             {
                 countNotEqualElements++;
             }
         }
-        timeExecution.Stop();
-        Console.WriteLine($"Время сравнения массивов: {timeExecution.ElapsedMilliseconds} ms");
+        TimeExecution.Stop();
+        Logger.Info($"Время сравнения массивов: {TimeExecution.ElapsedMilliseconds} ms");
     }
 }
