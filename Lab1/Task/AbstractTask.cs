@@ -1,14 +1,14 @@
 using System.Diagnostics;
 using NLog;
 
-namespace Lab1;
+namespace Lab1.Task;
 
-public abstract class AbstractTask
+public abstract class AbstractTask: ITask
 {
     /// <summary>
     ///Данные о времени запуске программы.
     /// </summary>
-    protected Stopwatch TimeExecution { get; }
+    protected Stopwatch TimeExecution;
 
     /// <summary>
     /// Количество элементов массивов.
@@ -18,15 +18,34 @@ public abstract class AbstractTask
     /// <summary>
     /// Минимальное количество элеметов массива.
     /// </summary>
-    protected const int MinCountElements = 10000;
+    private const int MinCountElements = 10000;
     
     /// <summary>
     /// Максимальное количество элеметов массива.
     /// </summary>
-    protected const int MaxCountElements = 100000;
-
+    private const int MaxCountElements = 320000000;
     
+    /// <summary>
+    /// Количество потоков.
+    /// </summary>
+    protected int CountThreads;
+
+    /// <summary>
+    /// Минимальное количество потоков.
+    /// </summary>
+    private const int MinCountThread = 100;
+    
+    /// <summary>
+    /// Максимальное количество потоков.
+    /// </summary>
+    private const int MaxCountThread = 10000;
+    
+    /// <summary>
+    /// Последовательность натуральных чисел.
+    /// </summary>
     protected int[] Array;
+
+    protected Thread[] Threads;
 
     /// <summary>
     /// Логгер приложения.
@@ -34,13 +53,24 @@ public abstract class AbstractTask
     /// </summary>
     protected Logger Logger { get; }
 
+    /// <summary>
+    /// Формат вывода целого числа.
+    /// </summary>
+    private const string IntFormat = "{0:## ##0}";
+
     protected AbstractTask()
     {
         Logger = LogManager.GetCurrentClassLogger();
-        TimeExecution = new Stopwatch();
+
         ReadInputData();
+        
+        TimeExecution = new Stopwatch();
+
         Array = new int[CountElements];
-        Array = CreateArrayRandomData();
+        Array = InitialArrayRandomData();
+        
+        Threads = new Thread[CountThreads];
+        Threads.Initialize();
     }
     
     /// <summary>
@@ -49,10 +79,19 @@ public abstract class AbstractTask
     protected virtual void ReadInputData()
     {
         Logger.Debug("Считывание входных параметров.");
-        CountElements = ReadIntFromConsole("Введите количество элементов: ", MinCountElements, MaxCountElements);
+        CountElements = ReadDigitFromConsole(
+            $"Введите количество элементов [{FormatInt(MinCountElements)}; {FormatInt(MaxCountElements)}]: ", 
+            MinCountElements, MaxCountElements);
+        CountThreads = ReadDigitFromConsole(
+            $"Введите количество потоков [{FormatInt(MinCountThread)}; {FormatInt(MaxCountThread)}]: ", 
+            MinCountThread, MaxCountThread);
     }
 
-    protected int[] CreateArrayRandomData()
+    /// <summary>
+    /// Инициализация массива случайными числами.
+    /// </summary>
+    /// <returns> массива заполненный случайными числами.</returns>
+    protected int[] InitialArrayRandomData()
     {
         var array = new int[CountElements];
         Random random;
@@ -64,23 +103,11 @@ public abstract class AbstractTask
 
         return array;
     }
-    protected int[] CreateArrayRandomData(int countElements)
-    {
-        var array = new int[countElements];
-        Random random;
-        for (var i = 0; i < countElements; i++)
-        {
-            random = new Random();
-            array[i] = random.Next();
-        }
-
-        return array;
-    }
 
     /// <summary>
     /// Выполнение действий в многопоточном режиме.
     /// </summary>
-    public void ExecutionWithThread()
+    protected virtual void ExecutionWithThread()
     {
         Logger.Debug("Выполнение в многопоточном режиме.");
     }
@@ -88,7 +115,7 @@ public abstract class AbstractTask
     /// <summary>
     /// Выполнение действий в однопоточном потоке.
     /// </summary>
-    public void ExecutionWithoutThread()
+    protected virtual void ExecutionWithoutThread()
     {
         Logger.Debug("Выполнение в однопоточном режиме.");
     }
@@ -100,7 +127,7 @@ public abstract class AbstractTask
     /// <param name="minValue">Минимальное значение (включительно).</param>
     /// <param name="maxValue">Максимальное значение (включительно).</param>
     /// <returns>Считанное целое число с консоли.</returns>
-    public int ReadIntFromConsole(string message, int minValue, int maxValue)
+    private int ReadDigitFromConsole(string message, int minValue, int maxValue)
     {
         bool error = true;
         int resultRead = 0;
@@ -115,12 +142,12 @@ public abstract class AbstractTask
 
                 if (error)
                 {
-                    WriteError($"Вводимое значение должно быть в промежутке [{minValue}; {maxValue}]");
+                    Logger.Error($"Вводимое значение должно быть в промежутке [{minValue}; {maxValue}]");
                 }
             }
             catch (FormatException formatException)
             {
-                WriteError(formatException.ToString());
+                WriteError("", formatException);
             }
         } while (error);
 
@@ -132,7 +159,7 @@ public abstract class AbstractTask
     /// </summary>
     /// <param name="message">Сообщение перед вводом данных</param>
     /// <returns>Считанное целое число с консоли.</returns>
-    public int ReadIntFromConsole(string message)
+    protected int ReadDigitFromConsole(string message)
     {
         bool error = true;
         int resultRead = 0;
@@ -146,7 +173,7 @@ public abstract class AbstractTask
             }
             catch (FormatException formatException)
             {
-                WriteError(formatException.ToString());
+                WriteError("Ошибка считывания числа", formatException);
             }
         } while (error);
 
@@ -156,10 +183,30 @@ public abstract class AbstractTask
     /// <summary>
     /// Запись ошибки.
     /// </summary>
-    /// <param name="error">Ошибка.</param>
-    public void WriteError(string error)
+    /// <param name="errorMessage">Ошибка.</param>
+    /// <param name="exception"></param>
+    private void WriteError(string errorMessage, Exception exception)
     {
-        Logger.Error(error);
+        Logger.Error(errorMessage);
+        Logger.Trace(exception);
+    }
+    
+    /// <summary>
+    /// Запуск выполения задачи.
+    /// </summary>
+    public void Run()
+    {
+        ExecutionWithoutThread();
+        ExecutionWithThread();
+    }
+
+    protected void WriteTimeResult()
+    {
+        Logger.Info($"Время сравнения массивов: {TimeExecution.ElapsedMilliseconds} ms");
+    }
+
+    private string FormatInt(int number)
+    {
+        return string.Format(IntFormat, number);
     }
 }
-
