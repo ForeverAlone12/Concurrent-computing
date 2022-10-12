@@ -61,16 +61,6 @@ public abstract class AbstractTask: ITask
     protected AbstractTask()
     {
         Logger = LogManager.GetCurrentClassLogger();
-
-        ReadInputData();
-        
-        TimeExecution = new Stopwatch();
-
-        Array = new int[CountElements];
-        Array = InitialArrayRandomData();
-        
-        Threads = new Thread[CountThreads];
-        Threads.Initialize();
     }
     
     /// <summary>
@@ -196,6 +186,16 @@ public abstract class AbstractTask: ITask
     /// </summary>
     public void Run()
     {
+        ReadInputData();
+        
+        TimeExecution = new Stopwatch();
+
+        Array = new int[CountElements];
+        Array = InitialArrayRandomData();
+        
+        Threads = new Thread[CountThreads];
+        Threads.Initialize();
+        
         ExecutionWithoutThread();
         ExecutionWithThread();
     }
