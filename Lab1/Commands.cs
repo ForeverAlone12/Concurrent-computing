@@ -20,7 +20,9 @@ public class Commands
             { "5", new Task5() },
             { "6", new Task6() },
             { "7", new Task7() },
-            { "8", new Task8() }
+            { "8", new Task8() },
+            { "9", new Task8() },
+            { "10", new Task8() }
         };
 
         _dictionary = new Dictionary<string, string>
