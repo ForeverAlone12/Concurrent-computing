@@ -2,7 +2,8 @@ namespace Lab1.Task;
 
 public class Task5 : AbstractTask
 {
-    public Task5() : base("Task5")
+    public Task5() : base("Task5",
+        "Поиск максимального значения последовательности")
     {
     }
 
@@ -11,7 +12,7 @@ public class Task5 : AbstractTask
         base.ExecutionWithoutThread();
 
         TimeExecution.Start();
-        Array.Max();
+        TaskResult.Results = Array.Max().ToString();
         TimeExecution.Stop();
         WriteTimeResult();
     }

@@ -3,12 +3,12 @@ namespace Lab1;
 /// <summary>
 /// Результаты выполнения задачи.
 /// </summary>
-public struct Result
+public struct TaskResult
 {
     /// <summary>
     /// Номер задачи.
     /// </summary>
-    public string TaskNumber;
+    public string Title;
 
     /// <summary>
     /// Количество элементов в последовательности.
@@ -25,9 +25,14 @@ public struct Result
     /// </summary>
     public string Time;
 
+    /// <summary>
+    /// Результат выполнения задачи.
+    /// </summary>
+    public string Results;
+
     public override string ToString()
     {
-        return string.Format($"{TaskNumber},{CountElements},{CountThreads},{Time}," +
+        return string.Format($"{Title},{CountElements},{CountThreads},{Time},{Results}" +
                              $"{Environment.OSVersion}," +
                              $"{Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE")}," +
                              $"{Environment.GetEnvironmentVariable("PROCESSOR_IDENTIFIER")}," +

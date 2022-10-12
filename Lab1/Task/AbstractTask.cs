@@ -6,9 +6,14 @@ namespace Lab1.Task;
 public abstract class AbstractTask : ITask
 {
     /// <summary>
-    /// Название задачи
+    /// Название задачи.
     /// </summary>
-    protected string Title;
+    private readonly string _title;
+
+    /// <summary>
+    /// Описание задачи.
+    /// </summary>
+    private readonly string _description;
     
     /// <summary>
     ///Данные о времени запуске программы.
@@ -63,14 +68,15 @@ public abstract class AbstractTask : ITask
     /// </summary>
     private const string IntFormat = "{0:## ##0}";
 
-    private Result _result;
-
-    protected AbstractTask(string title)
+    protected TaskResult TaskResult;
+    
+    protected AbstractTask(string title, string description)
     {
-        Title = title;
+        _title = title;
+        _description = description;
         Logger = LogManager.GetCurrentClassLogger();
         TimeExecution = new Stopwatch();
-        _result = new Result();
+        TaskResult = new TaskResult();
     }
 
     /// <summary>
@@ -110,7 +116,7 @@ public abstract class AbstractTask : ITask
     protected virtual void ExecutionWithThread()
     {
         Logger.Debug("Выполнение в многопоточном режиме.");
-        _result.CountThreads = CountThreads;
+        TaskResult.CountThreads = CountThreads;
     }
 
     /// <summary>
@@ -119,7 +125,7 @@ public abstract class AbstractTask : ITask
     protected virtual void ExecutionWithoutThread()
     {
         Logger.Debug("Выполнение в однопоточном режиме.");
-        _result.CountThreads = 1;
+        TaskResult.CountThreads = 1;
     }
 
     /// <summary>
@@ -200,8 +206,8 @@ public abstract class AbstractTask : ITask
     {
         ReadInputData();
 
-        _result.TaskNumber = Title;
-        _result.CountElements = CountElements;
+        TaskResult.Title = _title;
+        TaskResult.CountElements = CountElements;
 
         Array = new int[CountElements];
         Array = InitialArrayRandomData();
@@ -216,10 +222,10 @@ public abstract class AbstractTask : ITask
     protected void WriteTimeResult()
     {
         Logger.Info($"Время сравнения массивов: {TimeExecution.ElapsedMilliseconds} ms");
-        _result.Time = TimeExecution.ElapsedMilliseconds.ToString();
+        TaskResult.Time = TimeExecution.ElapsedMilliseconds.ToString();
 
         using var writer = new StreamWriter("result.csv", true);
-        writer.WriteLine(_result.ToString());
+        writer.WriteLine(TaskResult.ToString());
         writer.Flush();
     }
 

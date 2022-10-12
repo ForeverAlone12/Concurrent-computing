@@ -7,7 +7,8 @@ public class Task1 : AbstractTask
     private int[] _arrayC;
 
     public Task1()
-        : base("Task1")
+        : base("Task1",
+            "Совпадают ли поэлементно массивы А и С")
     {
         _arrayC = new int[CountElements];
         _arrayC = InitialArrayRandomData();
@@ -24,7 +25,7 @@ public class Task1 : AbstractTask
         }
 
         TimeExecution.Stop();
-        Logger.Info($"Время сравнения массивов: {TimeExecution.ElapsedMilliseconds} ms");
+        WriteTimeResult();
     }
 
     protected override void ExecutionWithoutThread()
@@ -44,6 +45,7 @@ public class Task1 : AbstractTask
         }
 
         TimeExecution.Stop();
-        Logger.Info($"Время сравнения массивов: {TimeExecution.ElapsedMilliseconds} ms");
+        TaskResult.Results = countNotEqualElements.ToString();
+        WriteTimeResult();
     }
 }

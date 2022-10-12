@@ -2,7 +2,9 @@ namespace Lab1.Task;
 
 public class Task4 : AbstractTask
 {
-    public Task4() : base("Task4")
+    public Task4() : base(
+        "Task4",
+        "Вычисление произведения последовательности чисел")
     {
     }
 
@@ -11,7 +13,7 @@ public class Task4 : AbstractTask
         base.ExecutionWithoutThread();
 
         TimeExecution.Start();
-        Array.Aggregate((x, y) => x * y);
+        TaskResult.Results = Array.Aggregate((x, y) => x * y).ToString();
         TimeExecution.Stop();
         WriteTimeResult();
     }

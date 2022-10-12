@@ -2,7 +2,8 @@ namespace Lab1.Task;
 
 public class Task6 : AbstractTask
 {
-    public Task6() : base("Task6")
+    public Task6() : base("Task6",
+        "Поиск минимального значения последовательности")
     {
     }
 
@@ -11,7 +12,7 @@ public class Task6 : AbstractTask
         base.ExecutionWithoutThread();
 
         TimeExecution.Start();
-        Array.Min();
+        TaskResult.Results = Array.Min().ToString();
         TimeExecution.Stop();
         WriteTimeResult();
     }

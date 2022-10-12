@@ -4,7 +4,8 @@ public class Task3 : AbstractTask
 {
     private int _number;
     
-    public Task3() : base("Task3")
+    public Task3() : base("Task3", 
+        "Определения количества вхождений числа в массив")
     {
     }
 
@@ -27,7 +28,7 @@ public class Task3 : AbstractTask
     {
         Logger.Debug("Вычисление стандартными стредствами.");
         TimeExecution.Start();
-        Array.Count(element => element == _number);
+        TaskResult.Results = Array.Count(element => element == _number).ToString();
         TimeExecution.Stop();
         WriteTimeResult();
     }
@@ -46,6 +47,7 @@ public class Task3 : AbstractTask
         }
 
         TimeExecution.Stop();
+        TaskResult.Results = count.ToString();
         WriteTimeResult();
     }
 

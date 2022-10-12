@@ -2,7 +2,8 @@ namespace Lab1.Task;
 
 public class Task9 : AbstractTask
 {
-    public Task9() : base("Task9")
+    public Task9() : base("Task9",
+        "Вычисдление суммы последовательности с чередованием знака.")
     {
     }
 
@@ -10,13 +11,9 @@ public class Task9 : AbstractTask
     {
         base.ExecutionWithoutThread();
 
-        int summa = 0;
+        int znak = 1;
         TimeExecution.Start();
-        for (var i = 2; i < Array.Length; i += 2)
-        {
-            summa += Array[i];
-        }
-
+        TaskResult.Results = Array.Aggregate((x, y) => x + y * (znak *= -1)).ToString();
         TimeExecution.Stop();
         WriteTimeResult();
     }
