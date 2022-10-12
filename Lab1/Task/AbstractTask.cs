@@ -28,12 +28,12 @@ public abstract class AbstractTask : ITask
     /// <summary>
     /// Минимальное количество элеметов массива.
     /// </summary>
-    private const int MinCountElements = 10000;
+    private const int MinCountElements = 100;
 
     /// <summary>
     /// Максимальное количество элеметов массива.
     /// </summary>
-    private const int MaxCountElements = 320000000;
+    private const int MaxCountElements = 10000000;
 
     /// <summary>
     /// Количество потоков.
@@ -43,12 +43,12 @@ public abstract class AbstractTask : ITask
     /// <summary>
     /// Минимальное количество потоков.
     /// </summary>
-    private const int MinCountThread = 100;
+    private const int MinCountThread = 100000;
 
     /// <summary>
     /// Максимальное количество потоков.
     /// </summary>
-    private const int MaxCountThread = 10000;
+    private const int MaxCountThread = 1000000;
 
     /// <summary>
     /// Последовательность натуральных чисел.
@@ -88,9 +88,9 @@ public abstract class AbstractTask : ITask
         CountElements = ReadDigitFromConsole(
             $"Введите количество элементов [{FormatInt(MinCountElements)}; {FormatInt(MaxCountElements)}]: ",
             MinCountElements, MaxCountElements);
-        CountThreads = ReadDigitFromConsole(
+    /*    CountThreads = ReadDigitFromConsole(
             $"Введите количество потоков [{FormatInt(MinCountThread)}; {FormatInt(MaxCountThread)}]: ",
-            MinCountThread, MaxCountThread);
+            MinCountThread, MaxCountThread);*/
     }
 
     /// <summary>

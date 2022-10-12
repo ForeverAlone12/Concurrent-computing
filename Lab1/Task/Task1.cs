@@ -10,6 +10,12 @@ public class Task1 : AbstractTask
         : base("Task1",
             "Совпадают ли поэлементно массивы А и С")
     {
+    }
+
+    protected override void ReadInputData()
+    {
+        base.ReadInputData();
+        
         _arrayC = new int[CountElements];
         _arrayC = InitialArrayRandomData();
     }
