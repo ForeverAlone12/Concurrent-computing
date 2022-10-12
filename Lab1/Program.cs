@@ -1,5 +1,4 @@
 ﻿using Lab1;
-using Lab1.Task;
 
 var commands = new Commands();
 
@@ -16,8 +15,6 @@ do
     Console.Write("Введите данные: ");
     var command = Console.ReadLine();
     isExit = commands.ParseCommand(command);
-
 } while (isExit);
 
 Console.WriteLine("Завершение программы.");
-
