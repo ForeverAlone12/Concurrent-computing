@@ -7,7 +7,7 @@ public class Task1 : AbstractTask
     private int[] _arrayC;
 
     public Task1()
-        : base()
+        : base("Task1")
     {
         _arrayC = new int[CountElements];
         _arrayC = InitialArrayRandomData();

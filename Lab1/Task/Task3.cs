@@ -3,6 +3,10 @@ namespace Lab1.Task;
 public class Task3 : AbstractTask
 {
     private int _number;
+    
+    public Task3() : base("Task3")
+    {
+    }
 
     protected override void ReadInputData()
     {

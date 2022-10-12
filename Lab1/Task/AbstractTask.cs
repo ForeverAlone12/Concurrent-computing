@@ -6,6 +6,11 @@ namespace Lab1.Task;
 public abstract class AbstractTask : ITask
 {
     /// <summary>
+    /// Название задачи
+    /// </summary>
+    protected string Title;
+    
+    /// <summary>
     ///Данные о времени запуске программы.
     /// </summary>
     protected Stopwatch TimeExecution;
@@ -58,10 +63,14 @@ public abstract class AbstractTask : ITask
     /// </summary>
     private const string IntFormat = "{0:## ##0}";
 
-    protected AbstractTask()
+    private Result _result;
+
+    protected AbstractTask(string title)
     {
+        Title = title;
         Logger = LogManager.GetCurrentClassLogger();
         TimeExecution = new Stopwatch();
+        _result = new Result();
     }
 
     /// <summary>
@@ -101,6 +110,7 @@ public abstract class AbstractTask : ITask
     protected virtual void ExecutionWithThread()
     {
         Logger.Debug("Выполнение в многопоточном режиме.");
+        _result.CountThreads = CountThreads;
     }
 
     /// <summary>
@@ -109,6 +119,7 @@ public abstract class AbstractTask : ITask
     protected virtual void ExecutionWithoutThread()
     {
         Logger.Debug("Выполнение в однопоточном режиме.");
+        _result.CountThreads = 1;
     }
 
     /// <summary>
@@ -189,9 +200,12 @@ public abstract class AbstractTask : ITask
     {
         ReadInputData();
 
+        _result.TaskNumber = Title;
+        _result.CountElements = CountElements;
+
         Array = new int[CountElements];
         Array = InitialArrayRandomData();
-
+        
         Threads = new Thread[CountThreads];
         Threads.Initialize();
 
@@ -202,6 +216,11 @@ public abstract class AbstractTask : ITask
     protected void WriteTimeResult()
     {
         Logger.Info($"Время сравнения массивов: {TimeExecution.ElapsedMilliseconds} ms");
+        _result.Time = TimeExecution.ElapsedMilliseconds.ToString();
+
+        using var writer = new StreamWriter("result.csv", true);
+        writer.WriteLine(_result.ToString());
+        writer.Flush();
     }
 
     private string FormatInt(int number)

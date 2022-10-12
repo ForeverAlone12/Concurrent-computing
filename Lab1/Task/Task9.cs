@@ -2,6 +2,10 @@ namespace Lab1.Task;
 
 public class Task9 : AbstractTask
 {
+    public Task9() : base("Task9")
+    {
+    }
+
     protected override void ExecutionWithoutThread()
     {
         base.ExecutionWithoutThread();
@@ -12,6 +16,7 @@ public class Task9 : AbstractTask
         {
             summa += Array[i];
         }
+
         TimeExecution.Stop();
         WriteTimeResult();
     }
