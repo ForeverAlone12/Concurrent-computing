@@ -11,7 +11,7 @@ bool isExit = true;
 do
 {
     var commands = new Commands();
-    Console.Write("Введите данные: ");
+    Console.Write("\nВведите данные: ");
     var command = Console.ReadLine();
     isExit = commands.ParseCommand(command);
 } while (isExit);

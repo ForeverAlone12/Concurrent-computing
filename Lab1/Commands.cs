@@ -21,8 +21,8 @@ public class Commands
             { "6", new Task6() },
             { "7", new Task7() },
             { "8", new Task8() },
-            { "9", new Task8() },
-            { "10", new Task8() }
+            { "9", new Task9() },
+            { "10", new Task10() }
         };
 
         _dictionary = new Dictionary<string, string>
